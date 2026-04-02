@@ -193,22 +193,30 @@ body:JSON.stringify(data)
 
 
 
-// 📥 Excel download
 function downloadExcel(){
+
 fetch(API)
 .then(r=>r.json())
 .then(data=>{
+
 let csv="Date,Line,Department,Location,Activity,Category,Priority,Person,Critical,Supervisor,Contact,Permit,HIRA,Status\n";
 
 data.forEach(d=>{
 csv+=`${d.date},${d.line},${d.department},${d.location},${d.activity},${d.category},${d.priority},${d.person},${d.critical},${d.supervisor},${d.contact},${d.permit},${d.hira},${d.status}\n`;
 });
-let blob=new Blob([csv]);
+
+let blob=new Blob([csv], {type:"text/csv"});  // 🔥 FIX
 let a=document.createElement("a");
 a.href=URL.createObjectURL(blob);
 a.download="job_report.csv";
 a.click();
+
+})
+.catch(err=>{
+console.error(err);
+alert("Download error ❌");
 });
+
 }
 
 </script>
