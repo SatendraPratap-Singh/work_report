@@ -25,6 +25,7 @@ button {margin:10px; padding:10px;}
 <th>Location</th><th>Activity</th><th>Category</th>
 <th>Priority</th><th>Person</th><th>Critical</th>
 <th>Supervisor</th><th>Contact</th><th>Permit</th><th>Status</th>
+<th>Permit</th><th>HIRA</th><th>Status</th>
 </tr>
 </thead>
 <tbody></tbody>
@@ -36,8 +37,7 @@ if(localStorage.getItem("admin")!=="true"){
 window.location.href="login.html";
 }
 
-const API="https://jobportal-production-dbb4.up.railway.app/api/jobplans";
-
+const API="https://workreport-production-7d01.up.railway.app/api/jobplans";
 fetch(API)
 .then(r=>r.json())
 .then(data=>{
@@ -48,6 +48,7 @@ t.innerHTML+=`<tr>
 <td>${d.location}</td><td>${d.activity}</td><td>${d.category}</td>
 <td>${d.priority}</td><td>${d.person}</td><td>${d.critical}</td>
 <td>${d.supervisor}</td><td>${d.contact}</td><td>${d.permit}</td><td>${d.status}</td>
+<td>${d.permit}</td><td>${d.hira}</td><td>${d.status}</td>
 </tr>`;
 });
 });
