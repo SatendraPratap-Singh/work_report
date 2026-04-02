@@ -6,7 +6,7 @@ import satyendra_job.portal.demo.model.JobPlan;
 import java.util.ArrayList;
 import java.util.List;
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS})
 @RestController
 @RequestMapping("/api/jobplans")
 public class UserController {
