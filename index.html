@@ -196,28 +196,43 @@ body:JSON.stringify(data)
 function downloadExcel(){
 
 fetch(API)
-.then(r=>r.json())
-.then(data=>{
+.then(response => {
+    if(!response.ok){
+        throw new Error("Network response not ok");
+    }
+    return response.json();
+})
+.then(data => {
 
-let csv="Date,Line,Department,Location,Activity,Category,Priority,Person,Critical,Supervisor,Contact,Permit,HIRA,Status\n";
+    if(data.length === 0){
+        alert("No data available ❌");
+        return;
+    }
 
-data.forEach(d=>{
-csv+=`${d.date},${d.line},${d.department},${d.location},${d.activity},${d.category},${d.priority},${d.person},${d.critical},${d.supervisor},${d.contact},${d.permit},${d.hira},${d.status}\n`;
-});
+    let csv="Date,Line,Department,Location,Activity,Category,Priority,Person,Critical,Supervisor,Contact,Permit,HIRA,Status\n";
 
-let blob=new Blob([csv], {type:"text/csv"});  // 🔥 FIX
-let a=document.createElement("a");
-a.href=URL.createObjectURL(blob);
-a.download="job_report.csv";
-a.click();
+    data.forEach(d=>{
+        csv+=`${d.date},${d.line},${d.department},${d.location},${d.activity},${d.category},${d.priority},${d.person},${d.critical},${d.supervisor},${d.contact},${d.permit},${d.hira},${d.status}\n`;
+    });
+
+    let blob = new Blob([csv], {type:"text/csv"});
+    let url = window.URL.createObjectURL(blob);
+
+    let a = document.createElement("a");
+    a.href = url;
+    a.download = "job_report.csv";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
 
 })
 .catch(err=>{
-console.error(err);
-alert("Download error ❌");
+    console.error("Download error:", err);
+    alert("Download failed ❌");
 });
 
 }
+
 
 </script>
 
