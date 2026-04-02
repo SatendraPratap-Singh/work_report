@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin</title>
+<style>
+body {font-family:Arial; padding:20px;}
+table {width:100%; border-collapse:collapse;}
+th {background:#3b5998; color:white;}
+td,th {padding:8px; border:1px solid #ddd;}
+button {margin:10px; padding:10px;}
+</style>
+</head>
+
+<body>
+
+<h2>Admin Dashboard</h2>
+
+<button onclick="logout()">Logout</button>
+<button onclick="downloadExcel()">Download Excel</button>
+
+<table id="dataTable">
+<thead>
+<tr>
+<th>Date</th><th>Line</th><th>Department</th>
+<th>Location</th><th>Activity</th><th>Category</th>
+<th>Priority</th><th>Person</th><th>Critical</th>
+<th>Supervisor</th><th>Contact</th><th>Permit</th><th>Status</th>
+<th>Permit</th><th>HIRA</th><th>Status</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+
+<script>
+
+if(localStorage.getItem("admin")!=="true"){
+window.location.href="login.html";
+}
+
+ const API ="https://workreport-production-e999.up.railway.app";
+fetch(API)
+.then(r=>r.json())
+.then(data=>{
+let t=document.querySelector("#dataTable tbody");
+data.forEach(d=>{
+t.innerHTML+=`<tr>
+<td>${d.date}</td><td>${d.line}</td><td>${d.department}</td>
+<td>${d.location}</td><td>${d.activity}</td><td>${d.category}</td>
+<td>${d.priority}</td><td>${d.person}</td><td>${d.critical}</td>
+<td>${d.supervisor}</td><td>${d.contact}</td><td>${d.permit}</td><td>${d.status}</td>
+<td>${d.permit}</td><td>${d.hira}</td><td>${d.status}</td>
+</tr>`;
+});
+});
+
+function downloadExcel(){
+fetch(API)
+.then(r=>r.json())
+.then(data=>{
+let csv="Date,Line,Department,Location,Activity,Category,Priority,Person,Critical,Supervisor,Contact,Permit,Status\n";
+data.forEach(d=>{
+csv+=`${d.date},${d.line},${d.department},${d.location},${d.activity},${d.category},${d.priority},${d.person},${d.critical},${d.supervisor},${d.contact},${d.permit},${d.status}\n`;
+});
+let blob=new Blob([csv]);
+let a=document.createElement("a");
+a.href=URL.createObjectURL(blob);
+a.download="report.csv";
+a.click();
+});
+}
+
+function logout(){
+localStorage.removeItem("admin");
+window.location.href="login.html";
+}
+
+</script>
+
+</body>
+</html>

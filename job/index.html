@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Job Planning</title>
+
+<style>
+body {
+    font-family: Arial;
+    background:#f1f3f4;
+    padding:10px;
+}
+
+.container {
+    background:white;
+    padding:20px;
+    border-radius:10px;
+}
+
+h2 {text-align:center;}
+
+label {
+    font-weight:bold;
+    margin-top:12px;
+    display:block;
+}
+
+input, select, textarea {
+    width:100%;
+    padding:10px;
+    margin-top:5px;
+    border-radius:6px;
+    border:1px solid #ccc;
+}
+
+.btn-row {
+    display:flex;
+    gap:10px;
+}
+
+button {
+    flex:1;
+    padding:12px;
+    border:none;
+    border-radius:6px;
+    color:white;
+    margin-top:15px;
+}
+
+.submit {background:#2c3e50;}
+.download {background:#2980b9;}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Daily Job Planning</h2>
+
+<label>Date</label>
+<input type="date" id="date">
+
+<label>Line</label>
+<select id="line">
+<option>Select Line</option>
+<option>Clinkerization</option>
+<option>Cement Unit</option>
+<option>Power Plant</option>
+</select>
+
+<label>Department</label>
+<select id="department">
+<option>Select Department</option>
+<option>Mechanical</option>
+<option>Process</option>
+<option>Electrical</option>
+<option>Instrument</option>
+<option>Civil</option>
+<option>Automobile</option>
+<option>Mines</option>
+<option>HR and Admin</option>
+<option>IT</option>
+<option>O&M</option>
+</select>
+
+<label>Location</label>
+<input type="text" placeholder="Specific site/zone" id="location">
+
+<label>Activity - Brief Description</label>
+<textarea id="activity"></textarea>
+
+<label>Job Category</label>
+<select id="category">
+<option>Select Category</option>
+<option>Routine</option>
+<option>Non-Routine</option>
+</select>
+
+<label>Priority</label>
+<select id="priority">
+<option>Select Priority</option>
+<option>High</option>
+<option>Medium</option>
+<option>Low</option>
+</select>
+
+<label>Job Done by (Team/Person)</label>
+<input type="text" placeholder="Name of person or agency" id="person">
+
+<label>Critical Activity Involved</label>
+<select id="critical">
+<option>Select Activity Type</option>
+<option>Working at height</option>
+<option>Confined space entry</option>
+<option>Electrical Safety</option>
+<option>LOTOTO</option>
+<option>Hot Work</option>
+<option>Material lifting</option>
+<option>Scaffolding</option>
+<option>Conveyor Maintenance</option>
+</select>
+
+<label>1st Person Responsible</label>
+<input type="text" placeholder="Supervisor Name" id="supervisor">
+
+<label>Contact Number</label>
+<input type="number" placeholder="10-digit number" id="contact">
+
+<label>Permit Status</label>
+<select id="permit">
+<option>Select Status</option>
+<option>Taken</option>
+<option>Not Taken</option>
+<option>Not Required</option>
+</select>
+
+<label>HIRA / SOP</label>
+<select id="hira">
+<option>Select Availability</option>
+<option>Available</option>
+<option>Not Available</option>
+</select>
+
+<label>Activity Status</label>
+<select id="status">
+<option>Planned</option>
+<option>Completed</option>
+</select>
+
+<div class="btn-row">
+<button class="submit" onclick="saveData()">Submit Data</button>
+<button class="download" onclick="downloadExcel()">Download Report</button>
+</div>
+
+</div>
+
+<script>
+
+// 🔥 API URL
+const API = "https://workreport-production-e999.up.railway.app";
+function saveData(){
+
+let data = {
+date: date.value,
+line: line.value,
+department: department.value,
+location: location.value,
+activity: activity.value,
+category: category.value,
+priority: priority.value,
+person: person.value,
+critical: critical.value,
+supervisor: supervisor.value,
+contact: contact.value,
+permit: permit.value,
+status: status.value,
+hira: hira.value
+};
+
+fetch(API,{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify(data)
+})
+.then(()=>alert("Saved ✅"));
+
+}
+
+// 📥 Excel download
+function downloadExcel(){
+fetch(API)
+.then(r=>r.json())
+.then(data=>{
+let csv="Date,Line,Department,Location,Activity,Category,Priority,Person,Critical,Supervisor,Contact,Permit,HIRA,Status\n";
+
+data.forEach(d=>{
+csv+=`${d.date},${d.line},${d.department},${d.location},${d.activity},${d.category},${d.priority},${d.person},${d.critical},${d.supervisor},${d.contact},${d.permit},${d.hira},${d.status}\n`;
+});
+let blob=new Blob([csv]);
+let a=document.createElement("a");
+a.href=URL.createObjectURL(blob);
+a.download="job_report.csv";
+a.click();
+});
+}
+
+</script>
+
+</body>
+</html>
